@@ -5,6 +5,7 @@ My `git/` directory as a repository.
 ## Table of Contents <!-- omit in toc -->
 
 - [Requirements](#requirements)
+- [Quick-Start](#quick-start)
 - [Setup](#setup)
 - [Usage](#usage)
 - [Direnv](#direnv)
@@ -25,6 +26,28 @@ My `git/` directory as a repository.
 - [`go-task/task`](https://taskfile.dev)
 - [Python](https://www.python.org/downloads/)
 - [`uv`](https://docs.astral.sh/uv)
+
+## Quick-Start
+
+- Clone the repository to `~/git` (or wherever you put your `git/` directory).
+  - HTTP: `git clone https://github.com/redjax/git_dir.git ~/git`
+  - SSH: `git clone git@github.com:redjax/git_dir ~/git`
+- Trust the `.mise.toml` file and install all tools.
+  - `mise trust && mise install`
+- Optionally, copy the commented example `.envrc.local` section at the bottom of the [`.envrc`](./.envrc) and paste it into a new file at `~/git/.envrc.local`.
+  - You can set local overrides or machine-specific environment variables.
+  - Trust the file with `direnv allow`.
+  - Now, any time you `cd` into the `~/git` directory, `direnv` will source those files and set the environment variables you define.
+  - When you `cd` out of the `~/git` directory, `direnv` will handle unloading those variables.
+- Run `task -l` to list all `go-task/task` sessions (to ensure `task` commands will work).
+
+Now you can start cloning repositories into the [`repos/` directory](./repos/). For example, `git clone git@github.com/username/repository.git repos/local_repo_name`. That repository can now be managed by the tasks, automations, etc in this `~/git` repository.
+
+After cloning a repository, test running the `status-all` task:
+
+```shell
+task status-all
+```
 
 ## Setup
 
