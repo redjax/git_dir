@@ -60,3 +60,23 @@ tasks:
       - task: scan-osv
       - task: scan-gitleaks
       - task: scan-trufflehog
+
+  clean-scansdir:
+    desc: Delete all scan result files except those under retain/ and .gitkeep files
+    cmds:
+      - cmd: |
+          scans_dir="{{.REPORT_DIR | default (print .HOME "/.scan_results")}}"
+          
+          echo "Cleaning scan results in $scans_dir..."
+          
+          if [ -d "$scans_dir" ]; then
+            ## Remove everything except 'retain' directory and .gitkeep files
+            find "$scans_dir" -mindepth 1 -maxdepth 1 \
+              ! -name retain \
+              ! -name '.gitkeep' \
+              -exec rm -rf {} + 2>/dev/null || true
+            
+            echo "[+] Scan results cleaned. Retained .gitkeep and $scans_dir/retain/."
+          else
+            echo "[-] No scan results directory found at $scans_dir."
+          fi

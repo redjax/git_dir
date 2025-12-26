@@ -91,3 +91,7 @@ tasks:
             done
           done
 
+  clean-scansdir:
+    desc: Remove all scan result files except those under retain/
+    cmds:
+      - task: scans:clean-scansdir
