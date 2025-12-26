@@ -1,0 +1,10 @@
+[tools]
+## https://mise-tools.jdx.dev/tools/python
+python = "3.13"
+## https://mise-tools.jdx.dev/tools/uv
+uv = "0.9.18"
+## https://github.com/aquaproj/aqua-registry/blob/main/pkgs/go-task/task/pkg.yaml
+"aqua:go-task/task" = "latest"
+## https://mise-tools.jdx.dev/tools/direnv
+direnv = "latest"
+
