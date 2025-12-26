@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+---
+version: "3"
+
+includes:
+  debug: .tasks/debug.yml
+  git: .tasks/git.yml
+
+tasks:
+  default:
+    desc: Show machine info
+    cmds:
+      - task: debug:info
+
+  status-all:
+    desc: Show `git status` for all repos found in current path
+    cmds:
+      - task: git:status-all
