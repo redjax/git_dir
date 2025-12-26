@@ -5,6 +5,15 @@ version: "3"
 includes:
   debug: .tasks/debug.yml
   git: .tasks/git.yml
+  scans: .tasks/scans.yml
+
+vars:
+  SCAN_ROOTS:
+    - repos
+    - sparse-clones
+    - worktrees
+  SAVE_REPORTS: '{{.SAVE_REPORTS | default "false"}}'
+  REPORT_DIR: '{{.HOME}}/.scan_results'
 
 tasks:
   default:
@@ -21,3 +30,105 @@ tasks:
     desc: Synchronize all git directories in the current path
     cmds:
       - task: git:fetch-all
+ 
+  gitleaks-scan:
+    desc: Run Gitleaks on all repositories
+    cmds:
+      - cmd: |
+          mkdir -p "{{.REPORT_DIR}}"
+          for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
+            [ -d "$root" ] || continue
+            find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
+            while read -r gitdir; do
+              repo="$(dirname "$gitdir")"
+              echo "Scanning $repo with Gitleaks..."
+              SCAN_TARGET="$repo" task scans:scan-gitleaks SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+            done
+          done
+
+  trufflehog-scan:
+    desc: Run TruffleHog on all repositories
+    cmds:
+      - cmd: |
+          mkdir -p "{{.REPORT_DIR}}"
+          for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
+            [ -d "$root" ] || continue
+            find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
+            while read -r gitdir; do
+              repo="$(dirname "$gitdir")"
+              echo "Scanning $repo with TruffleHog..."
+              SCAN_TARGET="$repo" task scans:scan-trufflehog SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+            done
+          done
+
+  osv-scan:
+    desc: Run OSV Scanner on all repositories
+    cmds:
+      - cmd: |
+          mkdir -p "{{.REPORT_DIR}}"
+          for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
+            [ -d "$root" ] || continue
+            find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
+            while read -r gitdir; do
+              repo="$(dirname "$gitdir")"
+              echo "Scanning $repo with OSV..."
+              SCAN_TARGET="$repo" task scans:scan-osv SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+            done
+          done
+
+  scan-all-repos:
+    desc: Run all scanners on all repositories
+    cmds:
+      - cmd: |
+          mkdir -p "{{.REPORT_DIR}}"
+          for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
+            [ -d "$root" ] || continue
+            find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
+            while read -r gitdir; do
+              repo="$(dirname "$gitdir")"
+              echo "Scanning $repo with all scanners..."
+              SCAN_TARGET="$repo" task scans:scan-all SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+            done
+          done
+
+  ## On-demand single-repo scans
+  osv-scan:single:
+    desc: "Run OSV scan on a single repository path. | Usage: task osv-scan:single -- ./repos/repo_name"
+    vars:
+      TARGET_PATH: '{{.CLI_ARGS | default "."}}'
+    cmds:
+      - cmd: |
+          echo "Running OSV Scanner on {{.TARGET_PATH}}"
+          SCAN_TARGET="{{.TARGET_PATH}}" task scans:scan-osv SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+
+  gitleaks-scan:single:
+    desc: "Run Gitleaks on a single repository path. | Usage: task gitleaks-scan:single -- ./repos/repo_name"
+    vars:
+      TARGET_PATH: '{{.CLI_ARGS | default "."}}'
+    cmds:
+      - cmd: |
+          echo "Running Gitleaks on {{.TARGET_PATH}}"
+          SCAN_TARGET="{{.TARGET_PATH}}" task scans:scan-gitleaks SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+
+  trufflehog-scan:single:
+    desc: "Run TruffleHog on a single repository path. | Usage: task trufflehog-scan:single -- ./repos/repo_name"
+    vars:
+      TARGET_PATH: '{{.CLI_ARGS | default "."}}'
+    cmds:
+      - cmd: |
+          echo "Running TruffleHog on {{.TARGET_PATH}}"
+          SCAN_TARGET="{{.TARGET_PATH}}" task scans:scan-trufflehog SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+
+  scan-all:single:
+    desc: "Run all scanners on a single repository path. | Usage: task scan-all:single -- ./repos/repo_name"
+    vars:
+      TARGET_PATH: '{{.CLI_ARGS | default "."}}'
+    cmds:
+      - cmd: |
+          echo "Running all scanners on {{.TARGET_PATH}}"
+          SCAN_TARGET="{{.TARGET_PATH}}" task scans:scan-all SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+
+  clean-scansdir:
+    desc: Remove all scan result files except those under retain/
+    cmds:
+      - task: scans:clean-scansdir

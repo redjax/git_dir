@@ -8,3 +8,9 @@ uv = "0.9.18"
 ## https://mise-tools.jdx.dev/tools/direnv
 direnv = "latest"
 
+## https://mise-tools.jdx.dev/tools/osv-scanner
+"aquasecurity/osv-scanner@latest" = "latest"
+## Trufflehog
+"aqua:trufflesecurity/trufflehog" = "latest"
+## Gitleaks
+"aqua:gitleaks/gitleaks" = "latest"

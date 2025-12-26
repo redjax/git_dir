@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+---
+version: "3"
+
+vars:
+  SCAN_TARGET: "."
+  SAVE_REPORTS: '{{.SAVE_REPORTS | default "false"}}'
+  REPORT_DIR: '{{.REPORT_DIR | default (print .HOME "/.scan_results")}}'
+
+tasks:
+  scan-osv:
+    desc: Run OSV Scanner on a single directory
+    cmds:
+      - cmd: |
+          echo "Running OSV Scanner on $SCAN_TARGET"
+          if find "$SCAN_TARGET" -maxdepth 2 \( -name 'go.mod' -o -name 'package.json' -o -name 'pom.xml' -o -name 'Cargo.toml' -o -name 'requirements.txt' -o -name 'pyproject.toml' \) -print -quit | grep -q .; then
+            if [ "{{.SAVE_REPORTS}}" = "true" ]; then
+              mkdir -p "{{.REPORT_DIR}}"
+              report_file="{{.REPORT_DIR}}/osv_$(basename "$SCAN_TARGET")_$(date +%Y%m%d_%H%M%S).json"
+              osv-scanner scan "$SCAN_TARGET" --format json > "$report_file" || true
+              echo "→ OSV report saved: $report_file"
+            else
+              osv-scanner scan "$SCAN_TARGET" || true
+            fi
+          else
+            echo "→ No dependency manifests found, skipping"
+          fi
+
+  scan-gitleaks:
+    desc: Run Gitleaks on a single directory
+    cmds:
+      - cmd: |
+          echo "Running Gitleaks on $SCAN_TARGET"
+          if [ "{{.SAVE_REPORTS}}" = "true" ]; then
+            mkdir -p "{{.REPORT_DIR}}"
+            report_file="{{.REPORT_DIR}}/gitleaks_$(basename "$SCAN_TARGET")_$(date +%Y%m%d_%H%M%S).json"
+            gitleaks detect --source "$SCAN_TARGET" --report-format=json --report-path "$report_file" || true
+            echo "→ Gitleaks report saved: $report_file"
+          else
+            gitleaks detect --source "$SCAN_TARGET" --report-format=json || true
+          fi
+
+  scan-trufflehog:
+    desc: Run TruffleHog on a single directory
+    cmds:
+      - cmd: |
+          echo "Running TruffleHog on $SCAN_TARGET"
+          if [ "{{.SAVE_REPORTS}}" = "true" ]; then
+            mkdir -p "{{.REPORT_DIR}}"
+            report_file="{{.REPORT_DIR}}/trufflehog_$(basename "$SCAN_TARGET")_$(date +%Y%m%d_%H%M%S).json"
+            cd "$SCAN_TARGET" && trufflehog filesystem . --json > "$report_file" || true
+            echo "→ TruffleHog report saved: $report_file"
+          else
+            cd "$SCAN_TARGET" && trufflehog filesystem . || true
+          fi
+
+  scan-all:
+    desc: Run all scanners on a single directory
+    cmds:
+      - task: scan-osv
+      - task: scan-gitleaks
+      - task: scan-trufflehog
+
+  clean-scansdir:
+    desc: Delete all scan result files except those under retain/ and .gitkeep files
+    cmds:
+      - cmd: |
+          scans_dir="{{.REPORT_DIR | default (print .HOME "/.scan_results")}}"
+          
+          echo "Cleaning scan results in $scans_dir..."
+          
+          if [ -d "$scans_dir" ]; then
+            ## Remove everything except 'retain' directory and .gitkeep files
+            find "$scans_dir" -mindepth 1 -maxdepth 1 \
+              ! -name retain \
+              ! -name '.gitkeep' \
+              -exec rm -rf {} + 2>/dev/null || true
+            
+            echo "[+] Scan results cleaned. Retained .gitkeep and $scans_dir/retain/."
+          else
+            echo "[-] No scan results directory found at $scans_dir."
+          fi
