@@ -33,6 +33,10 @@
 ## worktrees/ dir
 !worktrees/
 
+## .scan_results dir
+!.scan_results/
+!.scan_results/retain/
+
 ## Override for ignoring .local files
 *.local.yml
 

@@ -12,6 +12,8 @@ vars:
     - repos
     - sparse-clones
     - worktrees
+  SAVE_REPORTS: '{{.SAVE_REPORTS | default "false"}}'
+  REPORT_DIR: '{{.HOME}}/.scan_results'
 
 tasks:
   default:
@@ -33,63 +35,59 @@ tasks:
     desc: Run Gitleaks on all repositories
     cmds:
       - cmd: |
+          mkdir -p "{{.REPORT_DIR}}"
           for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
             [ -d "$root" ] || continue
-
-            # find all .git dirs up to depth 6, extract their parent paths
             find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
             while read -r gitdir; do
               repo="$(dirname "$gitdir")"
               echo "Scanning $repo with Gitleaks..."
-              SCAN_TARGET="$repo" task scans:scan-gitleaks
+              SCAN_TARGET="$repo" task scans:scan-gitleaks SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
             done
           done
-
 
   trufflehog-scan:
     desc: Run TruffleHog on all repositories
     cmds:
       - cmd: |
+          mkdir -p "{{.REPORT_DIR}}"
           for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
             [ -d "$root" ] || continue
-
             find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
             while read -r gitdir; do
               repo="$(dirname "$gitdir")"
               echo "Scanning $repo with TruffleHog..."
-              SCAN_TARGET="$repo" task scans:scan-trufflehog
+              SCAN_TARGET="$repo" task scans:scan-trufflehog SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
             done
           done
-
 
   osv-scan:
     desc: Run OSV Scanner on all repositories
     cmds:
       - cmd: |
+          mkdir -p "{{.REPORT_DIR}}"
           for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
             [ -d "$root" ] || continue
-
             find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
             while read -r gitdir; do
               repo="$(dirname "$gitdir")"
               echo "Scanning $repo with OSV..."
-              SCAN_TARGET="$repo" task scans:scan-osv
+              SCAN_TARGET="$repo" task scans:scan-osv SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
             done
           done
-
 
   scan-all-repos:
     desc: Run all scanners on all repositories
     cmds:
       - cmd: |
+          mkdir -p "{{.REPORT_DIR}}"
           for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
             [ -d "$root" ] || continue
-
             find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
             while read -r gitdir; do
               repo="$(dirname "$gitdir")"
               echo "Scanning $repo with all scanners..."
-              SCAN_TARGET="$repo" task scans:scan-all
+              SCAN_TARGET="$repo" task scans:scan-all SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
             done
           done
 

@@ -4,6 +4,8 @@ version: "3"
 
 vars:
   SCAN_TARGET: "."
+  SAVE_REPORTS: '{{.SAVE_REPORTS | default "false"}}'
+  REPORT_DIR: '{{.REPORT_DIR | default (print .HOME "/.scan_results")}}'
 
 tasks:
   scan-osv:
@@ -12,31 +14,49 @@ tasks:
       - cmd: |
           echo "Running OSV Scanner on $SCAN_TARGET"
           if find "$SCAN_TARGET" -maxdepth 2 \( -name 'go.mod' -o -name 'package.json' -o -name 'pom.xml' -o -name 'Cargo.toml' -o -name 'requirements.txt' -o -name 'pyproject.toml' \) -print -quit | grep -q .; then
-            osv-scanner scan "$SCAN_TARGET" || true
+            if [ "{{.SAVE_REPORTS}}" = "true" ]; then
+              mkdir -p "{{.REPORT_DIR}}"
+              report_file="{{.REPORT_DIR}}/osv_$(basename "$SCAN_TARGET")_$(date +%Y%m%d_%H%M%S).json"
+              osv-scanner scan "$SCAN_TARGET" --format json > "$report_file" || true
+              echo "→ OSV report saved: $report_file"
+            else
+              osv-scanner scan "$SCAN_TARGET" || true
+            fi
           else
             echo "→ No dependency manifests found, skipping"
           fi
-
 
   scan-gitleaks:
     desc: Run Gitleaks on a single directory
     cmds:
       - cmd: |
           echo "Running Gitleaks on $SCAN_TARGET"
-          gitleaks detect --source "$SCAN_TARGET" --report-format=json || true
+          if [ "{{.SAVE_REPORTS}}" = "true" ]; then
+            mkdir -p "{{.REPORT_DIR}}"
+            report_file="{{.REPORT_DIR}}/gitleaks_$(basename "$SCAN_TARGET")_$(date +%Y%m%d_%H%M%S).json"
+            gitleaks detect --source "$SCAN_TARGET" --report-format=json --report-path "$report_file" || true
+            echo "→ Gitleaks report saved: $report_file"
+          else
+            gitleaks detect --source "$SCAN_TARGET" --report-format=json || true
+          fi
 
   scan-trufflehog:
     desc: Run TruffleHog on a single directory
     cmds:
       - cmd: |
           echo "Running TruffleHog on $SCAN_TARGET"
-          cd "$SCAN_TARGET" && trufflehog filesystem . || true
+          if [ "{{.SAVE_REPORTS}}" = "true" ]; then
+            mkdir -p "{{.REPORT_DIR}}"
+            report_file="{{.REPORT_DIR}}/trufflehog_$(basename "$SCAN_TARGET")_$(date +%Y%m%d_%H%M%S).json"
+            cd "$SCAN_TARGET" && trufflehog filesystem . --json > "$report_file" || true
+            echo "→ TruffleHog report saved: $report_file"
+          else
+            cd "$SCAN_TARGET" && trufflehog filesystem . || true
+          fi
 
   scan-all:
     desc: Run all scanners on a single directory
     cmds:
-      - cmd: |
-          echo "Scanning $SCAN_TARGET with all scanners..."
-          osv-scanner scan --dir "$SCAN_TARGET"
-          gitleaks detect --source "$SCAN_TARGET" --report-format=json || true
-          trufflehog git --directory "$SCAN_TARGET" || true
+      - task: scan-osv
+      - task: scan-gitleaks
+      - task: scan-trufflehog
