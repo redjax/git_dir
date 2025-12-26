@@ -25,7 +25,7 @@ tasks:
     cmds:
       - cmd: |
           echo "Running TruffleHog on $SCAN_TARGET"
-          trufflehog git --directory "$SCAN_TARGET" || true
+          cd "$SCAN_TARGET" && trufflehog filesystem . || true
 
   scan-all:
     desc: Run all scanners on a single directory
