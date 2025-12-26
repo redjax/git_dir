@@ -14,8 +14,14 @@
 ## Go-task
 !Taskfile.yml
 
+!.tasks/
+!.tasks/*
+!.tasks/**
+
 ## .scripts/ dir
 !.scripts/
 !.scripts/*
 !.scripts/**
 
+## Override for ignoring .local files
+*.local.yml
