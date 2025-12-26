@@ -27,6 +27,12 @@
 ## repos/ dir
 !repos/
 
+## sparse-clones/ dir
+!sparse-clones/
+
+## worktrees/ dir
+!worktrees/
+
 ## Override for ignoring .local files
 *.local.yml
 
