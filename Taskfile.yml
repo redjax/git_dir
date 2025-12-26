@@ -16,3 +16,8 @@ tasks:
     desc: Show `git status` for all repos found in current path
     cmds:
       - task: git:status-all
+
+  fetch-all:
+    desc: Synchronize all git directories in the current path
+    cmds:
+      - task: git:fetch-all

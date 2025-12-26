@@ -15,3 +15,14 @@ tasks:
               (cd "$(dirname "$d")" && git status -s) || true
             fi
           done
+
+  fetch-all:
+    desc: Do a 'fetch --all --prune' on all repositories
+    cmds:
+      - platforms: [linux, darwin]
+        cmd: |
+          find . -type d -name .git -prune | while read -r gitdir; do
+            repo="$(dirname "$gitdir")"
+            echo "=== $(basename "$repo") ==="
+            git -C "$repo" fetch --all --prune || echo "(fetch failed)"
+          done
