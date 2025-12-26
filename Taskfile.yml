@@ -33,50 +33,63 @@ tasks:
     desc: Run Gitleaks on all repositories
     cmds:
       - cmd: |
-          for root in {{.SCAN_ROOTS}}; do
+          for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
             [ -d "$root" ] || continue
-            find "$root" -mindepth 1 -maxdepth 6 -type d | while read -r dir; do
-              if git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-                task scans:scan-gitleaks vars:SCAN_TARGET="$dir"
-              fi
+
+            # find all .git dirs up to depth 6, extract their parent paths
+            find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
+            while read -r gitdir; do
+              repo="$(dirname "$gitdir")"
+              echo "Scanning $repo with Gitleaks..."
+              SCAN_TARGET="$repo" task scans:scan-gitleaks
             done
           done
+
 
   trufflehog-scan:
     desc: Run TruffleHog on all repositories
     cmds:
       - cmd: |
-          for root in {{.SCAN_ROOTS}}; do
+          for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
             [ -d "$root" ] || continue
-            find "$root" -mindepth 1 -maxdepth 6 -type d | while read -r dir; do
-              if git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-                task scans:scan-trufflehog vars:SCAN_TARGET="$dir"
-              fi
+
+            find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
+            while read -r gitdir; do
+              repo="$(dirname "$gitdir")"
+              echo "Scanning $repo with TruffleHog..."
+              SCAN_TARGET="$repo" task scans:scan-trufflehog
             done
           done
+
 
   osv-scan:
     desc: Run OSV Scanner on all repositories
     cmds:
       - cmd: |
-          for root in {{.SCAN_ROOTS}}; do
+          for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
             [ -d "$root" ] || continue
-            find "$root" -mindepth 1 -maxdepth 6 -type d | while read -r dir; do
-              if git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-                task scans:scan-osv vars:SCAN_TARGET="$dir"
-              fi
+
+            find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
+            while read -r gitdir; do
+              repo="$(dirname "$gitdir")"
+              echo "Scanning $repo with OSV..."
+              SCAN_TARGET="$repo" task scans:scan-osv
             done
           done
+
 
   scan-all-repos:
     desc: Run all scanners on all repositories
     cmds:
       - cmd: |
-          for root in {{.SCAN_ROOTS}}; do
+          for root in {{range .SCAN_ROOTS}}{{.}} {{end}}; do
             [ -d "$root" ] || continue
-            find "$root" -mindepth 1 -maxdepth 6 -type d | while read -r dir; do
-              if git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-                task scans:scan-all vars:SCAN_TARGET="$dir"
-              fi
+
+            find "$root" -mindepth 1 -maxdepth 6 -type d -name .git 2>/dev/null |
+            while read -r gitdir; do
+              repo="$(dirname "$gitdir")"
+              echo "Scanning $repo with all scanners..."
+              SCAN_TARGET="$repo" task scans:scan-all
             done
           done
+

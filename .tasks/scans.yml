@@ -10,28 +10,28 @@ tasks:
     desc: Run OSV Scanner on a single directory
     cmds:
       - cmd: |
-          echo "Running OSV Scanner on {{.SCAN_TARGET}}"
-          osv-scanner scan --dir "{{.SCAN_TARGET}}"
+          echo "Running OSV Scanner on $SCAN_TARGET"
+          osv-scanner scan --dir "$SCAN_TARGET"
 
   scan-gitleaks:
-    desc: Run Gitleaks scan on a single directory
+    desc: Run Gitleaks on a single directory
     cmds:
       - cmd: |
-          echo "Running Gitleaks on {{.SCAN_TARGET}}"
-          gitleaks detect --source "{{.SCAN_TARGET}}" --report-format=json || true
+          echo "Running Gitleaks on $SCAN_TARGET"
+          gitleaks detect --source "$SCAN_TARGET" --report-format=json || true
 
   scan-trufflehog:
-    desc: Run TruffleHog scan on a single directory
+    desc: Run TruffleHog on a single directory
     cmds:
       - cmd: |
-          echo "Running TruffleHog on {{.SCAN_TARGET}}"
-          trufflehog git --directory "{{.SCAN_TARGET}}" || true
+          echo "Running TruffleHog on $SCAN_TARGET"
+          trufflehog git --directory "$SCAN_TARGET" || true
 
   scan-all:
     desc: Run all scanners on a single directory
     cmds:
       - cmd: |
-          echo "Scanning {{.SCAN_TARGET}} with all scanners..."
-          osv-scanner scan --dir "{{.SCAN_TARGET}}"
-          gitleaks detect --source "{{.SCAN_TARGET}}" --report-format=json || true
-          trufflehog git --directory "{{.SCAN_TARGET}}" || true
+          echo "Scanning $SCAN_TARGET with all scanners..."
+          osv-scanner scan --dir "$SCAN_TARGET"
+          gitleaks detect --source "$SCAN_TARGET" --report-format=json || true
+          trufflehog git --directory "$SCAN_TARGET" || true
