@@ -91,6 +91,43 @@ tasks:
             done
           done
 
+  ## On-demand single-repo scans
+  osv-scan:single:
+    desc: "Run OSV scan on a single repository path. | Usage: task osv-scan:single -- ./repos/repo_name"
+    vars:
+      TARGET_PATH: '{{.CLI_ARGS | default "."}}'
+    cmds:
+      - cmd: |
+          echo "Running OSV Scanner on {{.TARGET_PATH}}"
+          SCAN_TARGET="{{.TARGET_PATH}}" task scans:scan-osv SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+
+  gitleaks-scan:single:
+    desc: "Run Gitleaks on a single repository path. | Usage: task gitleaks-scan:single -- ./repos/repo_name"
+    vars:
+      TARGET_PATH: '{{.CLI_ARGS | default "."}}'
+    cmds:
+      - cmd: |
+          echo "Running Gitleaks on {{.TARGET_PATH}}"
+          SCAN_TARGET="{{.TARGET_PATH}}" task scans:scan-gitleaks SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+
+  trufflehog-scan:single:
+    desc: "Run TruffleHog on a single repository path. | Usage: task trufflehog-scan:single -- ./repos/repo_name"
+    vars:
+      TARGET_PATH: '{{.CLI_ARGS | default "."}}'
+    cmds:
+      - cmd: |
+          echo "Running TruffleHog on {{.TARGET_PATH}}"
+          SCAN_TARGET="{{.TARGET_PATH}}" task scans:scan-trufflehog SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+
+  scan-all:single:
+    desc: "Run all scanners on a single repository path. | Usage: task scan-all:single -- ./repos/repo_name"
+    vars:
+      TARGET_PATH: '{{.CLI_ARGS | default "."}}'
+    cmds:
+      - cmd: |
+          echo "Running all scanners on {{.TARGET_PATH}}"
+          SCAN_TARGET="{{.TARGET_PATH}}" task scans:scan-all SAVE_REPORTS="{{.SAVE_REPORTS}}" REPORT_DIR="{{.REPORT_DIR}}"
+
   clean-scansdir:
     desc: Remove all scan result files except those under retain/
     cmds:
