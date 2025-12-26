@@ -7,6 +7,7 @@ My `git/` directory as a repository.
 - [Requirements](#requirements)
 - [Setup](#setup)
 - [Usage](#usage)
+- [Direnv](#direnv)
 
 ## Requirements
 
@@ -65,3 +66,15 @@ This structure accomplishes a few things:
 > There are a couple of exceptions to this. You can store sparse clones in [the `sparse-clones/` directory](./sparse-clones/), and git worktrees in [the `worktrees/` directory](./worktrees/).
 >
 > In general, unless you have a reason to keep a git repository in another path in the `~/git` directory, use the `repos/` directory to clone/create new repositories.
+
+## Direnv
+
+You can use `direnv` to automatically set environment variables when you `cd` into the `~/git` repository, and un-set them automatically when you `cd` out of that directory.
+
+The [`.envrc` file](./.envrc) sets some environment variables that will be the same across every machine that clones this repository. It is source-controlled, and should remain generic, and free of any secret/personal data.
+
+If you want to add more custom environment variables for the specific machine you're working on, you can create a `.envrc.local` file, which will be ignored by git so you can put whatever environment variables you want in it. Just copy the commented code at the bottom of the [`.envrc` file](.envrc) to `.envrc.local`, delete the `# ` at the beginning of each line, and customize to your liking.
+
+You can set whatever environment variables you want in this file. Think of it a bit like a `~/.bashrc`, but only while your shell session's working directory is `~/git`.
+
+If you navigate to another directory, i.e. `cd ../` or `cd repos/`, the environment variables will unload.
