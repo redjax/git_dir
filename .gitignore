@@ -1,0 +1,21 @@
+## Ignore everything in this path, unless explicitly allowed
+*
+
+## Allow specific files/dirs
+!.gitignore
+!README.md
+
+## Mise
+!.mise.toml
+
+## Direnv
+!.envrc
+
+## Go-task
+!Taskfile.yml
+
+## .scripts/ dir
+!.scripts/
+!.scripts/*
+!.scripts/**
+
