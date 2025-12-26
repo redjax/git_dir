@@ -1,6 +1,6 @@
 # Git dir <!-- omit in toc -->
 
-My `git/` directory as a repository.
+My `~/git/` directory as a repository.
 
 ## Table of Contents <!-- omit in toc -->
 
