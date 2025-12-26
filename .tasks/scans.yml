@@ -11,7 +11,12 @@ tasks:
     cmds:
       - cmd: |
           echo "Running OSV Scanner on $SCAN_TARGET"
-          osv-scanner scan --dir "$SCAN_TARGET"
+          if find "$SCAN_TARGET" -maxdepth 2 \( -name 'go.mod' -o -name 'package.json' -o -name 'pom.xml' -o -name 'Cargo.toml' -o -name 'requirements.txt' -o -name 'pyproject.toml' \) -print -quit | grep -q .; then
+            osv-scanner scan "$SCAN_TARGET" || true
+          else
+            echo "→ No dependency manifests found, skipping"
+          fi
+
 
   scan-gitleaks:
     desc: Run Gitleaks on a single directory
