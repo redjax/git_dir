@@ -8,6 +8,7 @@ My `git/` directory as a repository.
 - [Setup](#setup)
 - [Usage](#usage)
 - [Direnv](#direnv)
+- [Taskfile tasks](#taskfile-tasks)
 
 ## Requirements
 
@@ -73,8 +74,31 @@ You can use `direnv` to automatically set environment variables when you `cd` in
 
 The [`.envrc` file](./.envrc) sets some environment variables that will be the same across every machine that clones this repository. It is source-controlled, and should remain generic, and free of any secret/personal data.
 
-If you want to add more custom environment variables for the specific machine you're working on, you can create a `.envrc.local` file, which will be ignored by git so you can put whatever environment variables you want in it. Just copy the commented code at the bottom of the [`.envrc` file](.envrc) to `.envrc.local`, delete the `# ` at the beginning of each line, and customize to your liking.
+If you want to add more custom environment variables for the specific machine you're working on, you can create a `.envrc.local` file, which will be ignored by git so you can put whatever environment variables you want in it. Just copy the commented code at the bottom of the [`.envrc` file](.envrc) to `.envrc.local`, delete the `#` at the beginning of each line, and customize to your liking.
 
 You can set whatever environment variables you want in this file. Think of it a bit like a `~/.bashrc`, but only while your shell session's working directory is `~/git`.
 
 If you navigate to another directory, i.e. `cd ../` or `cd repos/`, the environment variables will unload.
+
+## Taskfile tasks
+
+You can use [`go-task/task`](https://taskfile.dev), which reads from the [`Taskfile.yml`](./Taskfile.yml) to create cross-platform sessions. Inspired by [`Make`](https://www.gnu.org/software/make/), `go-task/task` is primarily a build tool, but can be used for all kinds of automations.
+
+The `Taskfile.yml` imports tasks defined in the [`.tasks/` directory](./.tasks/). You can list all available tasks with:
+
+```shell
+$ task -l
+
+task: Available tasks for this project:
+* default:              Show machine info
+* fetch-all:            Synchronize all git directories in the current path
+* status-all:           Show `git status` for all repos found in current path
+* git:fetch-all:        Fetch --all --prune for all repositories (parallel, worktree only)
+* git:status-all:       Show dirty git status for all repositories
+```
+
+Running a task is as simple as running `task <task-name>`. For example, to check the status of all repositories found in `~/git/{repos,sparse-clones,worktrees}`:
+
+```shell
+task status-all
+```
