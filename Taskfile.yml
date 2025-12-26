@@ -5,6 +5,13 @@ version: "3"
 includes:
   debug: .tasks/debug.yml
   git: .tasks/git.yml
+  scans: .tasks/scans.yml
+
+vars:
+  SCAN_ROOTS:
+    - repos
+    - sparse-clones
+    - worktrees
 
 tasks:
   default:
@@ -21,3 +28,55 @@ tasks:
     desc: Synchronize all git directories in the current path
     cmds:
       - task: git:fetch-all
+ 
+  gitleaks-scan:
+    desc: Run Gitleaks on all repositories
+    cmds:
+      - cmd: |
+          for root in {{.SCAN_ROOTS}}; do
+            [ -d "$root" ] || continue
+            find "$root" -mindepth 1 -maxdepth 6 -type d | while read -r dir; do
+              if git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+                task scans:scan-gitleaks vars:SCAN_TARGET="$dir"
+              fi
+            done
+          done
+
+  trufflehog-scan:
+    desc: Run TruffleHog on all repositories
+    cmds:
+      - cmd: |
+          for root in {{.SCAN_ROOTS}}; do
+            [ -d "$root" ] || continue
+            find "$root" -mindepth 1 -maxdepth 6 -type d | while read -r dir; do
+              if git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+                task scans:scan-trufflehog vars:SCAN_TARGET="$dir"
+              fi
+            done
+          done
+
+  osv-scan:
+    desc: Run OSV Scanner on all repositories
+    cmds:
+      - cmd: |
+          for root in {{.SCAN_ROOTS}}; do
+            [ -d "$root" ] || continue
+            find "$root" -mindepth 1 -maxdepth 6 -type d | while read -r dir; do
+              if git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+                task scans:scan-osv vars:SCAN_TARGET="$dir"
+              fi
+            done
+          done
+
+  scan-all-repos:
+    desc: Run all scanners on all repositories
+    cmds:
+      - cmd: |
+          for root in {{.SCAN_ROOTS}}; do
+            [ -d "$root" ] || continue
+            find "$root" -mindepth 1 -maxdepth 6 -type d | while read -r dir; do
+              if git -C "$dir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+                task scans:scan-all vars:SCAN_TARGET="$dir"
+              fi
+            done
+          done
