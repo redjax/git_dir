@@ -3,6 +3,7 @@
 
 ## Allow specific files/dirs
 !.gitignore
+!.gitkeep
 !README.md
 
 ## Mise
@@ -23,5 +24,9 @@
 !.scripts/*
 !.scripts/**
 
+## repos/ dir
+!repos/
+
 ## Override for ignoring .local files
 *.local.yml
+
