@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+---
+version: "3"
+
+tasks:
+  status-all:
+    desc: Show status of all projects
+    cmds:
+      - platforms: [linux, darwin]
+        cmd: |-
+          set -e
+          for d in ./*/.git; do
+            if [ -d "$d" ]; then
+              echo "=== $(basename "$(dirname "$d")") ==="
+              (cd "$(dirname "$d")" && git status -s) || true
+            fi
+          done
