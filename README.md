@@ -7,6 +7,7 @@ My `~/git/` directory as a repository.
 - [Requirements](#requirements)
 - [Quick-Start](#quick-start)
 - [Setup](#setup)
+  - [Fix VSCode Opening Parent ~/git Repository](#fix-vscode-opening-parent-git-repository)
 - [Usage](#usage)
 - [Direnv](#direnv)
 - [Taskfile tasks](#taskfile-tasks)
@@ -73,6 +74,17 @@ direnv allow
 ## List tasks ensure go-task/task is working
 task -l
 ```
+
+### Fix VSCode Opening Parent ~/git Repository
+
+If you open a repo from the `repos/` directory in VSCode, the source control plugin might default to the `~/git` repository. To fix this, open VSCode's settings (`CTRL+,`) and search for `git auto repository detection`. Look for this option:
+
+```plaintext
+Git: Auto Repository Detection
+Configures when repositories should be automatically detected.
+```
+
+And set the dropdown to `false`, then reload your window.
 
 ## Usage
 
