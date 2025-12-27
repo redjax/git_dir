@@ -9,7 +9,7 @@ uv = "0.9.18"
 direnv = "latest"
 
 ## https://mise-tools.jdx.dev/tools/osv-scanner
-"aquasecurity/osv-scanner@latest" = "latest"
+"aqua:google/osv-scanner" = "latest"
 ## Trufflehog
 "aqua:trufflesecurity/trufflehog" = "latest"
 ## Gitleaks
