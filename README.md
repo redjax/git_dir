@@ -102,6 +102,8 @@ This structure accomplishes a few things:
 > There are a couple of exceptions to this. You can store sparse clones in [the `sparse-clones/` directory](./sparse-clones/), and git worktrees in [the `worktrees/` directory](./worktrees/).
 >
 > In general, unless you have a reason to keep a git repository in another path in the `~/git` directory, use the `repos/` directory to clone/create new repositories.
+>
+> There is also an [`organizations/` directory](./organizations/), where you can group repositories in an organization (i.e. on Github,  Gitlab, etc), isolated from the rest of your repository.
 
 ## Direnv
 
