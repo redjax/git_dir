@@ -19,6 +19,9 @@
 !.tasks/*
 !.tasks/**
 
+## organizations/ dir
+!organizations/
+
 ## .scripts/ dir
 !.scripts/
 !.scripts/*
