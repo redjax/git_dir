@@ -40,6 +40,9 @@
 !.scan_results/
 !.scan_results/retain/
 
+## Experiments dir
+!experiments/
+
 ## Override for ignoring .local files
 *.local.yml
 
