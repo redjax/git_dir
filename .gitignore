@@ -43,6 +43,8 @@
 ## Experiments dir
 !experiments/
 
+## Workspaces dir
+!.workspaces/
+
 ## Override for ignoring .local files
 *.local.yml
-
