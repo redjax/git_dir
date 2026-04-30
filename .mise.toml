@@ -1,6 +1,6 @@
 [tools]
 ## https://mise-tools.jdx.dev/tools/python
-python = "3.13"
+python = "3.14"
 ## https://mise-tools.jdx.dev/tools/uv
 uv = "latest"
 ## https://github.com/aquaproj/aqua-registry/blob/main/pkgs/go-task/task/pkg.yaml
