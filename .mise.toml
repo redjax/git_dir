@@ -14,3 +14,9 @@ direnv = "latest"
 "aqua:trufflesecurity/trufflehog" = "latest"
 ## Gitleaks
 "aqua:gitleaks/gitleaks" = "latest"
+
+## https://mise-tools.jdx.dev/tools/shellcheck
+shellcheck = "latest"
+## https://mise-tools.jdx.dev/tools/shfmt
+shfmt = "latest"
+
