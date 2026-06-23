@@ -14,3 +14,6 @@ direnv = "latest"
 "aqua:trufflesecurity/trufflehog" = "latest"
 ## Gitleaks
 "aqua:gitleaks/gitleaks" = "latest"
+
+## https://mise-tools.jdx.dev/tools/fly
+"aqua:concourse/concourse/fly" = "latest"
