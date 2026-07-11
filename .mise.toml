@@ -17,3 +17,6 @@ direnv = "latest"
 
 ## https://mise-tools.jdx.dev/tools/fly
 "aqua:concourse/concourse/fly" = "latest"
+
+## https://mise-tools.jdx.dev/tools/gh
+gh = "latest"
