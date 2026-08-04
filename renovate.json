@@ -1,0 +1,48 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended"
+    ],
+    "enabledManagers": [
+        "github-actions",
+        "pep621",
+        "mise"
+    ],
+    "dependencyDashboard": true,
+    "ignorePaths": [
+        "submodules/**",
+        "**/.gitmodules"
+    ],
+    "lockFileMaintenance": {
+        "enabled": true
+    },
+    "packageRules": [
+        {
+            "matchManagers": [
+                "pep621"
+            ],
+            "matchFileNames": [
+                "scripts/updater/**"
+            ],
+            "rangeStrategy": "bump"
+        },
+        {
+            "matchManagers": [
+                "github-actions"
+            ],
+            "matchFileNames": [
+                ".github/workflows/**"
+            ]
+        },
+        {
+            "matchUpdateTypes": [
+                "minor",
+                "patch",
+                "digest"
+            ],
+            "automerge": true,
+            "automergeType": "pr",
+            "platformAutomerge": true
+        }
+    ]
+}

@@ -52,5 +52,13 @@
 ## Workspaces dir
 !.workspaces/
 
+## Github workflows dir
+!.github/
+!.github/workflows/
+!.github/workflows/*.yml
+
 ## Override for ignoring .local files
 *.local.yml
+
+## Allow renovate.json
+!renovate.json
