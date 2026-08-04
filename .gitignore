@@ -19,6 +19,9 @@
 !.tasks/*
 !.tasks/**
 
+## Ansible
+.ansible
+
 ## organizations/ dir
 !organizations/
 
@@ -51,4 +54,3 @@
 
 ## Override for ignoring .local files
 *.local.yml
-
