@@ -8,15 +8,23 @@ uv = "latest"
 ## https://mise-tools.jdx.dev/tools/direnv
 direnv = "latest"
 
-## https://mise-tools.jdx.dev/tools/osv-scanner
-"aqua:google/osv-scanner" = "latest"
-## Trufflehog
-"aqua:trufflesecurity/trufflehog" = "latest"
-## Gitleaks
-"aqua:gitleaks/gitleaks" = "latest"
+## Create a .mise.local.toml to add machine-specific tooling.
+#  Instead of installing all tools on every machine, keep the
+#  "core" tools in this file, and allow overriding in a local
+#  Mise config.
+#
+#  Examples:
+#
+# [tools]
+# ## https://mise-tools.jdx.dev/tools/osv-scanner
+# "aqua:google/osv-scanner" = "latest"
+# ## Trufflehog
+# "aqua:trufflesecurity/trufflehog" = "latest"
+# ## Gitleaks
+# "aqua:gitleaks/gitleaks" = "latest"
 
-## https://mise-tools.jdx.dev/tools/fly
-"aqua:concourse/concourse/fly" = "latest"
+# ## https://mise-tools.jdx.dev/tools/fly
+# "aqua:concourse/concourse/fly" = "latest"
 
-## https://mise-tools.jdx.dev/tools/gh
-gh = "latest"
+# ## https://mise-tools.jdx.dev/tools/gh
+# gh = "latest"
