@@ -2,11 +2,11 @@
 ## https://mise-tools.jdx.dev/tools/python
 python = "3.14"
 ## https://mise-tools.jdx.dev/tools/uv
-uv = "latest"
+uv = "0.12.8"
 ## https://github.com/aquaproj/aqua-registry/blob/main/pkgs/go-task/task/pkg.yaml
-"aqua:go-task/task" = "latest"
+"aqua:go-task/task" = "3.53.1"
 ## https://mise-tools.jdx.dev/tools/direnv
-direnv = "latest"
+direnv = "2.37.1"
 
 ## Create a .mise.local.toml to add machine-specific tooling.
 #  Instead of installing all tools on every machine, keep the
@@ -17,14 +17,14 @@ direnv = "latest"
 #
 # [tools]
 # ## https://mise-tools.jdx.dev/tools/osv-scanner
-# "aqua:google/osv-scanner" = "latest"
+# "aqua:google/osv-scanner" = "2.5.1"
 # ## Trufflehog
-# "aqua:trufflesecurity/trufflehog" = "latest"
+# "aqua:trufflesecurity/trufflehog" = "3.97.1"
 # ## Gitleaks
-# "aqua:gitleaks/gitleaks" = "latest"
+# "aqua:gitleaks/gitleaks" = "8.30.1"
 
 # ## https://mise-tools.jdx.dev/tools/fly
-# "aqua:concourse/concourse/fly" = "latest"
+# "aqua:concourse/concourse/fly" = "8.3.0"
 
 # ## https://mise-tools.jdx.dev/tools/gh
-# gh = "latest"
+# gh = "2.98.0"
