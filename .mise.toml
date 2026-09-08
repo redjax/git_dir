@@ -2,7 +2,7 @@
 ## https://mise-tools.jdx.dev/tools/python
 python = "3.14"
 ## https://mise-tools.jdx.dev/tools/uv
-uv = "0.12.8"
+uv = "0.12.10"
 ## https://github.com/aquaproj/aqua-registry/blob/main/pkgs/go-task/task/pkg.yaml
 "aqua:go-task/task" = "3.53.1"
 ## https://mise-tools.jdx.dev/tools/direnv
