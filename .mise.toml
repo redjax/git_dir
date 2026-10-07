@@ -7,6 +7,8 @@ uv = "0.12.23"
 "aqua:go-task/task" = "3.54.0"
 ## https://mise-tools.jdx.dev/tools/direnv
 direnv = "2.38.1"
+## https://mise-tools.jdx.dev/tools/gitu
+gitu = "0.43.0"
 
 ## Create a .mise.local.toml to add machine-specific tooling.
 #  Instead of installing all tools on every machine, keep the
