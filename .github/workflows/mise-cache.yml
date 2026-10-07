@@ -1,0 +1,53 @@
+---
+#############################################################
+# Build Mise container early to speed up PR & merge builds  #
+#                                                           #
+# After the initial build, layers that haven't changed will #
+# not be rebuilt, saving CI time.                           #
+#############################################################
+
+name: Warm mise build cache
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .mise.toml
+      - .containers/ci/mise.Dockerfile
+      - .github/workflows/mise-cache.yml
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mise-cache-main
+  cancel-in-progress: false
+
+jobs:
+  mise-cache:
+    name: Build mise cache
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build mise installation check
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: .containers/ci/mise.Dockerfile
+          target: mise-check
+          pull: true
+          push: false
+          load: false
+          cache-from: type=gha,scope=mise-ci
+          cache-to: type=gha,scope=mise-ci,mode=max,ignore-error=true
