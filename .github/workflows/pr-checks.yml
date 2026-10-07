@@ -75,17 +75,21 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Build mise installation check
-        shell: bash
-        run: |
-          set -euo pipefail
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
 
-          docker build \
-            --pull \
-            --progress=plain \
-            --file .containers/ci/mise.Dockerfile \
-            --target mise-check \
-            --tag mise-pr-check:local \
+      - name: Build mise installation check
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: .containers/ci/mise.Dockerfile
+          target: mise-check
+          pull: true
+          push: false
+          load: false
+          tags: mise-pr-check:local
+          cache-from: type=gha,scope=mise-ci
+          cache-to: type=gha,scope=mise-ci,mode=max,ignore-error=true
             .
 
   renovate-gate:
