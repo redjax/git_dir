@@ -8,6 +8,7 @@
         "pep621",
         "mise"
     ],
+    "minimumReleaseAge": "14 days",
     "dependencyDashboard": true,
     "ignorePaths": [
         "submodules/**",
