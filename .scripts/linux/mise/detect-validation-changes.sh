@@ -29,7 +29,7 @@ cd "$repo_root"
 watched_paths=(
   ".mise.toml"
   ".containers/ci/mise.Dockerfile"
-  ".scripts/mise/detect-validation-changes.sh"
+  ".scripts/linux/mise/detect-validation-changes.sh"
 )
 
 {

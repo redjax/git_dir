@@ -49,7 +49,7 @@ jobs:
           set -euo pipefail
 
           if mise_changed="$(
-            bash .scripts/mise/detect-validation-changes.sh \
+            bash .scripts/linux/mise/detect-validation-changes.sh \
               "$BASE_SHA" \
               "$HEAD_SHA"
           )"; then
