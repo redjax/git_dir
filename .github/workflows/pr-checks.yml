@@ -48,20 +48,18 @@ jobs:
         run: |
           set -euo pipefail
 
-          if git diff --quiet "${BASE_SHA}...${HEAD_SHA}" -- \
-            .mise.toml \
-            .containers/ci/mise.Dockerfile
-          then
-            echo "mise=false" >> "$GITHUB_OUTPUT"
+          if mise_changed="$(
+            bash .scripts/mise/detect-validation-changes.sh \
+              "$BASE_SHA" \
+              "$HEAD_SHA"
+          )"; then
+            echo "mise=$mise_changed" >> "$GITHUB_OUTPUT"
           else
             status=$?
 
-            if [[ "$status" -ne 1 ]]; then
-              echo "Failed to determine changed files."
-              exit "$status"
-            fi
-
-            echo "mise=true" >> "$GITHUB_OUTPUT"
+            echo "Change detection failed."
+            echo "The Docker build job will not run, and Renovate gate will fail."
+            exit "$status"
           fi
 
   mise-check:
