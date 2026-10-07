@@ -57,6 +57,12 @@
 !.github/workflows/
 !.github/workflows/*.yml
 
+## Container dir
+!.containers/
+!.containers/ci/
+!Dockerfile
+!*.Dockerfile
+
 ## Override for ignoring .local files
 *.local.yml
 
