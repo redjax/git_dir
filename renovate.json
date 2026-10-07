@@ -43,6 +43,21 @@
             "automerge": true,
             "automergeType": "pr",
             "platformAutomerge": true
+        },
+        {
+            "description": "Wait two weeks before updating selected mise tools",
+            "matchManagers": [
+                "mise"
+            ],
+            "matchFileNames": [
+                ".mise.toml"
+            ],
+            "matchPackageNames": [
+                "astral-sh/uv",
+                "go-task/task",
+                "direnv/direnv"
+            ],
+            "minimumReleaseAge": "14 days"
         }
     ]
 }
