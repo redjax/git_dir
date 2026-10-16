@@ -6,7 +6,7 @@ uv = "0.12.23"
 ## https://github.com/aquaproj/aqua-registry/blob/main/pkgs/go-task/task/pkg.yaml
 "aqua:go-task/task" = "3.54.0"
 ## https://mise-tools.jdx.dev/tools/direnv
-direnv = "2.38.1"
+direnv = "2.38.2"
 ## https://mise-tools.jdx.dev/tools/gitu
 gitu = "0.43.0"
 ## https://mise-tools.jdx.dev/tools/lazygit
