@@ -22,6 +22,10 @@
 ## Ansible
 .ansible
 
+## Pre-commit/Prek
+!.pre-commit-config.yml
+!prek.toml
+
 ## organizations/ dir
 !organizations/
 
