@@ -6,7 +6,8 @@
     "enabledManagers": [
         "github-actions",
         "pep621",
-        "mise"
+        "mise",
+        "pre-commit"
     ],
     "minimumReleaseAge": "14 days",
     "dependencyDashboard": true,
