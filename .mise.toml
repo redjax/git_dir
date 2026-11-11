@@ -8,7 +8,7 @@ uv = "0.13.6"
 ## https://mise-tools.jdx.dev/tools/direnv
 direnv = "2.38.2"
 ## https://mise-tools.jdx.dev/tools/gitu
-gitu = "0.43.0"
+gitu = "0.44.0"
 ## https://mise-tools.jdx.dev/tools/lazygit
 lazygit = "0.66.2"
 
